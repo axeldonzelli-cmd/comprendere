@@ -793,6 +793,49 @@ a.q-card:hover{border-color:var(--acc);transform:translateY(-2px)}
 }
 @media (max-width:560px){ .q-card{grid-template-columns:70px minmax(0,1fr)} .q-card .cover{width:70px} .q-bar .acts .btn{padding:8px 10px} }
 @media (prefers-reduced-motion:reduce){ .q-card{transition:none} }
+/* ---------- IL PROGETTO ---------- */
+.pj-hero{background:var(--deep);color:var(--deep-fg);padding-block:clamp(48px,9vw,110px) clamp(40px,7vw,80px)}
+.pj-hero .kicker{color:var(--deep-accent)}
+.pj-hero h1{font-size:var(--step-4);margin-top:14px;max-width:16ch}
+.pj-hero .lead{font-size:var(--step-2);font-family:var(--font-text);line-height:1.35;margin-top:22px;max-width:36ch;color:rgba(255,255,255,.88)}
+.pj-sec{padding-block:clamp(40px,6vw,72px);border-bottom:1px solid var(--line)}
+.pj-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:24px 64px}
+.pj-n{display:block;font-family:var(--font-display);font-size:var(--step--1);letter-spacing:.14em;color:var(--muted);margin-bottom:10px}
+.pj-sec h2{font-size:var(--step-3);max-width:16ch}
+.pj-head{margin-bottom:28px}
+.pj-head .hint{margin-top:10px}
+.pj-text p{font-size:var(--step-1);line-height:1.5;max-width:56ch}
+.pj-text p + p{margin-top:16px}
+.pj-goals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.pj-goal{border-top:3px solid var(--fg);padding-top:16px}
+.pj-goal h3{font-size:var(--step-1);margin:10px 0 8px}
+.pj-goal p{font-size:var(--step-0);color:var(--muted)}
+.pj-tag{display:inline-block;font-family:var(--font-display);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border:1px solid var(--line);border-radius:2px;color:var(--muted)}
+.pj-feats{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:16px}
+.pj-feat{display:flex;flex-direction:column;gap:8px;padding:22px;border:1px solid var(--line);border-radius:3px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
+.pj-feat:hover{border-color:var(--fg);transform:translateY(-2px)}
+.pj-k{font-family:var(--font-display);font-size:var(--step--1);letter-spacing:.1em;text-transform:uppercase;color:var(--deep-accent);font-weight:600}
+:root:not([data-theme="dark"]) .pj-k{color:#0E7C91}
+.pj-feat h3{font-size:var(--step-1)}
+.pj-feat p{color:var(--muted);font-size:var(--step-0)}
+.pj-g{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:8px}
+.pj-go{font-family:var(--font-display);font-size:var(--step--1);font-weight:600;letter-spacing:.04em;margin-top:6px}
+.pj-go::after{content:" →"}
+.pj-status{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+.pj-status h3{font-size:var(--step-0);margin-bottom:10px}
+.pj-status ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:8px}
+.pj-status li{font-size:var(--step-0)}
+.pj-status div + div li{color:var(--muted)}
+.pj-steps{margin:0;padding:0;list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:16px}
+.pj-steps li{counter-increment:st;display:grid;grid-template-columns:40px minmax(0,1fr);font-size:var(--step-1);line-height:1.45}
+.pj-steps li::before{content:counter(st);font-family:var(--font-display);font-weight:600;color:var(--muted)}
+.pj-steps b{font-weight:600}
+.pj-sign{padding-block:clamp(40px,6vw,72px) 80px}
+.pj-sign p{font-family:var(--font-text);font-size:var(--step-2);max-width:40ch}
+.pj-sign b{font-weight:600}
+.pj-sign .btns{margin-top:22px}
+@media (max-width:820px){ .pj-two{grid-template-columns:minmax(0,1fr)} .pj-goals,.pj-status{grid-template-columns:minmax(0,1fr)} }
+@media (prefers-reduced-motion:reduce){ .pj-feat{transition:none} }
 </style>
 </head>
 <body>
@@ -922,6 +965,7 @@ const MENU = [
   {id:'quadro', label:'Il quadro', sub:'Le regole in vigore, spiegate'},
   {id:'autori', label:'Autori', sub:`${AUTHORS.length} firme, dalla A alla Z`},
   {id:'contatti', label:'Contatti', sub:'Comin & Partners a Roma, Milano e Bruxelles'},
+  {id:'progetto', label:'Il progetto', sub:'Perché questo prototipo'},
 ];
 function nav(active){
   document.getElementById('nav').innerHTML =
@@ -2063,6 +2107,84 @@ window.addEventListener('beforeunload', ev => { if (ED.on && ED.dirty && !CAN.de
   if (CAN.edit && location.hash.startsWith('#quadro-') && !ED.on) route(true);
 })();
 
+/* ---------- IL PROGETTO ---------- */
+function renderProject(){
+  nav('progetto');
+  const nRead = ALL.filter(readable).filter(e => e.type !== 'soglia').length;
+  const nQ = issues.filter(i => qGet(i.id)).length;
+  const FEAT = [
+    {k:'Archivio', t:'Tutta la rivista in un posto', d:`I numeri dal ${RANGE[0]} al ${RANGE[1]} con l’indice integrale: ${ALL.length} voci, comprese quelle che oggi esistono solo su carta, ognuna con la sua pagina.`, go:'#archivio', g:['Valore']},
+    {k:'Lettura', t:'La rivista sul telefono', d:`Editoriali e primi articoli di ogni numero leggibili per intero, con note e biografie degli autori: ${nRead} testi in questo prototipo.`, go:'#n9-sapelli', g:['Giovani']},
+    {k:'Percorsi', t:'Leggere per tema', d:`${D.themes.length} temi che attraversano i numeri, dall’energia alla demografia. Ogni articolo rimanda a quelli che ne parlano in altri numeri.`, go:'#percorsi', g:['Giovani','Valore']},
+    {k:'Autori', t:'Le firme in primo piano', d:`${AUTHORS.length} autori con biografia, contributi e profili social. Ogni autore ha un kit per condividere i propri articoli.`, go:'#autori', g:['Distribuzione','Valore']},
+    {k:'Condividi', t:'Ogni articolo diventa un post', d:'Card grafiche nei formati di LinkedIn, X, Instagram, WhatsApp e storie, con una citazione testuale dell’articolo e un testo pronto da pubblicare.', go:'#n9-a2', g:['Distribuzione','Giovani']},
+    {k:'Il quadro', t:'Le regole in vigore, spiegate', d:'Accanto al dibattito di ogni numero, una scheda sulle norme che oggi governano quel tema, con fonti ufficiali e data di aggiornamento.', go:'#quadro-n9', g:['Giovani','Valore']},
+  ];
+  const GOALS = [
+    ['Distribuzione', 'Più lettori, oltre la carta', 'Oggi Comprendere vive soprattutto su carta. Ogni articolo condivisibile in un clic, da lettori e autori, porta la rivista dove si discute ogni giorno.'],
+    ['Giovani', 'Un pubblico più giovane', 'Formati pensati per il telefono, percorsi per tema, schede che spiegano le regole: modi di entrare nella rivista anche per chi non l’ha mai sfogliata.'],
+    ['Valore', 'Contenuti che durano', 'Tra un numero e l’altro i testi restano vivi: si ritrovano, si collegano, si citano. Per autori e partner significa più visibilità e più tempo di vita dei contenuti.'],
+  ];
+  app.innerHTML = `<div class="pj">
+  <header class="pj-hero"><div class="wrap">
+    <div class="kicker">Il progetto</div>
+    <h1>Comprendere, oltre la carta</h1>
+    <p class="lead">Un prototipo per portare la rivista dove oggi non arriva: più lettori, più occasioni di lettura, più valore per chi ci scrive.</p>
+  </div></header>
+
+  <section class="pj-sec"><div class="wrap pj-two">
+    <div><span class="pj-n">01</span><h2>Il punto di partenza</h2></div>
+    <div class="pj-text">
+      <p>Comprendere ha firme autorevoli, temi forti e un’identità riconoscibile. Esce tre volte l’anno, su carta, e oggi vive soprattutto nelle mani di chi la riceve stampata.</p>
+      <p>Il digitale può allargarne la portata: rendere i contenuti facili da ritrovare e da condividere tra un numero e l’altro, e farli arrivare a chi ancora non conosce la rivista. Il prototipo prova a farlo senza toccarne la natura.</p>
+    </div>
+  </div></section>
+
+  <section class="pj-sec"><div class="wrap">
+    <div class="pj-head"><span class="pj-n">02</span><h2>Tre obiettivi</h2></div>
+    <div class="pj-goals">${GOALS.map(([k,t,d])=>`<div class="pj-goal"><span class="pj-tag">${k}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}</div>
+  </div></section>
+
+  <section class="pj-sec"><div class="wrap">
+    <div class="pj-head"><span class="pj-n">03</span><h2>Cosa fa il prototipo</h2><p class="hint">Ogni funzione si può provare: tocca “Apri” per andarci.</p></div>
+    <div class="pj-feats">${FEAT.map(f=>`<a class="pj-feat" href="${f.go}"><span class="pj-k">${f.k}</span><h3>${f.t}</h3><p>${f.d}</p><span class="pj-g">${f.g.map(g=>`<span class="pj-tag">${g}</span>`).join('')}</span><span class="pj-go">Apri</span></a>`).join('')}</div>
+  </div></section>
+
+  <section class="pj-sec"><div class="wrap pj-two">
+    <div><span class="pj-n">04</span><h2>Cosa è pronto, cosa è dimostrativo</h2></div>
+    <div class="pj-status">
+      <div><h3>Funziona con i contenuti reali</h3><ul>
+        <li>Indice integrale dei numeri dal ${RANGE[0]} al ${RANGE[1]}</li>
+        <li>${nRead} testi leggibili, con note e biografie</li>
+        <li>Pagine autore e card di condivisione per ogni articolo</li>
+        <li>Scheda del Quadro sul numero 9, con fonti verificate</li>
+      </ul></div>
+      <div><h3>Da validare o completare</h3><ul>
+        <li>I percorsi tematici sono una proposta da discutere con la redazione</li>
+        <li>Il quadro è pronto per ${nQ === 1 ? 'un numero' : nQ + ' numeri'}: le altre schede sono da scrivere</li>
+        <li>La modalità redazione qui è un’anteprima: le modifiche non vengono salvate</li>
+        <li>Diritti da verificare per caratteri tipografici, illustrazioni e soglie letterarie</li>
+      </ul></div>
+    </div>
+  </div></section>
+
+  <section class="pj-sec"><div class="wrap pj-two">
+    <div><span class="pj-n">05</span><h2>I prossimi passi</h2></div>
+    <ol class="pj-steps">
+      <li><span><b>Condividere la visione con la redazione.</b> Temi, percorsi e testi da pubblicare in digitale.</span></li>
+      <li><span><b>Dare a ogni articolo il suo indirizzo.</b> Così il link condiviso mostra già la card della rivista.</span></li>
+      <li><span><b>Completare Il quadro</b> per ogni numero, con un accesso riservato alla redazione per aggiornarlo.</span></li>
+      <li><span><b>Misurare.</b> Letture, condivisioni e nuovi lettori, numero per numero.</span></li>
+    </ol>
+  </div></section>
+
+  <section class="pj-sign"><div class="wrap">
+    <p>Prototipo ideato e realizzato da <b>Axel Donzelli</b> per Comprendere.</p>
+    <div class="btns"><a class="btn primary" href="#archivio">Entra nell’archivio</a><a class="btn" href="#quadro-n9">Apri Il quadro</a></div>
+  </div></section>
+  </div>`;
+}
+
 function route(keep){
   const h = location.hash.slice(1);
   if (ED.on && ED.dirty && !CAN.demo && h !== 'quadro-' + ED.issue){
@@ -2080,6 +2202,7 @@ function route(keep){
   else if (h === 'percorsi') renderThemes();
   else if (h.startsWith('percorso-') && THEME[h.slice(9)]) renderTheme(h.slice(9));
   else if (h === 'contatti') renderContacts();
+  else if (h === 'progetto') renderProject();
   else if (h === 'quadro') renderQuadroIndex();
   else if (h.startsWith('quadro-') && byId[h.slice(7)] && qGet(h.slice(7))) renderQuadro(h.slice(7));
   else if (h.startsWith('quadro-')) renderQuadroIndex();
